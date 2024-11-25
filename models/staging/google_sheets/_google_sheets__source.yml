@@ -1,0 +1,158 @@
+version: 2
+
+sources:
+  - name: google_sheets
+    schema: google_sheets
+    database: GAME
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+
+    freshness:
+      warn_after: {count: 24, period: day}
+      error_after: {count: 48, period: day}
+
+    tables:
+
+      - name: data
+        loaded_at_field: _fivetran_synced
+        description: "Tabla que contiene datos de compras de juegos."
+        columns:
+          - name: _fivetran_synced
+            description: "Marca de tiempo de cuando los datos fueron sincronizados desde Fivetran."
+          - name: purchase_id
+            description: "Identificador único para cada compra."
+            tests:
+              - not_null
+              - unique
+          - name: game_title
+            description: "Título del juego."
+          - name: platform
+            description: "Plataforma en la que está disponible el juego."
+          - name: price
+            description: "Precio del juego."
+          - name: game_id
+            description: "Identificador único para el juego."
+            tests:
+              - not_null
+              - unique
+              - relationships:
+                  to: ref('games')
+                  field: game_id
+          - name: quantity_purchased
+            description: "Cantidad del juego comprada."
+          - name: user_id
+            description: "Identificador único para el usuario que realiza la compra."
+            tests:
+              - not_null
+              - unique
+              - relationships:
+                  to: ref('users')
+                  field: user_id
+          - name: user_rating
+            description: "Calificación dada por el usuario al juego."
+          - name: purchase_date
+            description: "Fecha en que se realizó la compra."
+          - name: user_review_text
+            description: "Reseña proporcionada por el usuario."
+
+      - name: games
+        loaded_at_field: _fivetran_synced
+        description: "Tabla que contiene metadatos sobre los juegos."
+        columns:
+          - name: _fivetran_synced
+            description: "Marca de tiempo de cuando los datos fueron sincronizados desde Fivetran."
+          - name: soundtrack_quality
+            description: "Calidad de la banda sonora en el juego."
+          - name: game_title
+            description: "Título del juego."
+          - name: age_group_targeted
+            description: "Grupo de edad al que está dirigido el juego."
+          - name: platform
+            description: "Plataforma en la que está disponible el juego."
+          - name: game_mode
+            description: "Modo de juego (online, offline)."
+          - name: user_rating
+            description: "Calificación promedio de los usuarios para el juego."
+          - name: developer
+            description: "Desarrollador del juego."
+          - name: publisher
+            description: "Editor del juego."
+          - name: story_quality
+            description: "Calidad de la historia en el juego."
+          - name: game_length_hours
+            description: "Duración del juego en horas."
+          - name: release_year
+            description: "Año en que se lanzó el juego."
+          - name: multiplayer
+            description: "Indica si el juego tiene multijugador."
+          - name: price
+            description: "Precio del juego."
+          - name: min_number_of_players
+            description: "Número mínimo de jugadores requeridos para jugar."
+          - name: requires_special_device
+            description: "Indica si el juego requiere dispositivos especiales."
+          - name: graphics_quality
+            description: "Calidad de los gráficos en el juego."
+          - name: genre
+            description: "Género del juego."
+          - name: user_review_text
+            description: "Texto de la reseña proporcionada por el usuario."
+          - name: game_id
+            description: "Identificador único para el juego."
+            tests:
+              - not_null
+              - unique
+              - relationships:
+                  to: ref('data')
+                  field: game_id
+
+      - name: platform
+        loaded_at_field: _fivetran_synced
+        description: "Tabla que contiene información sobre plataformas de juegos."
+        columns:
+          - name: _fivetran_synced
+            description: "Marca de tiempo de cuando los datos fueron sincronizados desde Fivetran."
+          - name: platform_name
+            description: "Nombre de la plataforma de juego"
+          - name: country
+            description: "País de donde es originaria la plataforma."
+          - name: company_name
+            description: "Nombre de la empresa que posee la plataforma."
+          - name: platform_id
+            description: "Identificador único para la plataforma."
+            tests:
+              - not_null
+              - unique
+
+      - name: users
+        loaded_at_field: _fivetran_synced
+        description: "Tabla que contiene información sobre los usuarios."
+        columns:
+          - name: _fivetran_synced
+            description: "Marca de tiempo de cuando los datos fueron sincronizados desde Fivetran."
+          - name: first_name
+            description: "Nombre del usuario."
+            tests:
+              - not_null
+          - name: last_name
+            description: "Apellido del usuario."
+          - name: state
+            description: "Estado donde reside el usuario."
+          - name: country
+            description: "País donde reside el usuario."
+          - name: postal_code
+            description: "Código postal del usuario."
+            tests:
+              - not_null
+              - accepted_values:
+                  values: '^[0-9]{5,9}$'
+          - name: user_id
+            description: "Identificador único para el usuario."
+            tests:
+              - not_null
+              - unique
+              - relationships:
+                  to: ref('data')
+                  field: user_id
