@@ -5,7 +5,7 @@ with
         
     ),
 
-    base_platform as (
+    stg_platform as (
 
         select
             platform_id,
@@ -17,4 +17,4 @@ with
     )
 
 select *
-from base_platform
+from stg_platform
