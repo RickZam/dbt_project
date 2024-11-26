@@ -36,7 +36,6 @@ sources:
             description: "Identificador único para el juego."
             tests:
               - not_null
-              - unique
               - relationships:
                   to: ref('games')
                   field: game_id
@@ -46,7 +45,6 @@ sources:
             description: "Identificador único para el usuario que realiza la compra."
             tests:
               - not_null
-              - unique
               - relationships:
                   to: ref('users')
                   field: user_id
@@ -146,8 +144,6 @@ sources:
             description: "Código postal del usuario."
             tests:
               - not_null
-              - accepted_values:
-                  values: '^[0-9]{5,9}$'
           - name: user_id
             description: "Identificador único para el usuario."
             tests:

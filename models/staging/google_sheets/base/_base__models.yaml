@@ -1,0 +1,101 @@
+version: 2
+
+models:
+  - name: base_data
+    description: "Este modelo transforma y limpia los datos de compras de juegos, normalizando los títulos de los juegos, eliminando tildes, diéresis y caracteres especiales."
+    columns:
+      - name: purchase_id
+        description: "Identificador único de la compra."
+        tests:
+          - not_null
+          - unique
+      - name: platform
+        description: "Plataforma en la que se compró el juego (e.g., PlayStation, Xbox, PC)."
+        tests:
+          - not_null
+      - name: price
+        description: "Precio de la compra del juego."
+        tests:
+          - not_null
+      - name: game_id
+        description: "Identificador único del juego."
+        tests:
+          - not_null
+          - unique
+      - name: quantity_purchased
+        description: "Cantidad de juegos comprados."
+        tests:
+          - not_null
+      - name: user_id
+        description: "Identificador único del usuario que realizó la compra."
+        tests:
+          - not_null
+          - unique
+      - name: user_rating
+        description: "Valoración del usuario para el juego comprado."
+      - name: purchase_date
+        description: "Fecha en que se realizó la compra."
+        tests:
+          - not_null
+      - name: user_review_text
+        description: "Texto de la reseña del usuario sobre el juego."
+      - name: game_title
+        description: "Título del juego, con tildes y diéresis eliminados, y caracteres especiales reemplazados."
+        tests:
+          - not_null
+      - name: load_date_utc
+        description: "Fecha y hora en que los datos fueron sincronizados en UTC."
+
+  - name: base_games
+    description: "Este modelo transforma y limpia los datos de juegos, normalizando los títulos de los juegos, eliminando tildes, diéresis y caracteres especiales."
+    columns:
+      - name: game_mode
+        description: "Modo de juego (e.g., individual, cooperativo, etc.)."
+      - name: user_rating
+        description: "Valoración media del usuario sobre el juego."
+      - name: developer
+        description: "Desarrollador del juego."
+      - name: publisher
+        description: "Editor del juego."
+      - name: story_quality
+        description: "Calidad de la historia del juego."
+      - name: game_length_hours_
+        description: "Duración del juego en horas."
+      - name: release_year
+        description: "Año de lanzamiento del juego."
+      - name: multiplayer
+        description: "Indica si el juego tiene modo multijugador."
+      - name: price
+        description: "Precio del juego."
+      - name: min_number_of_players
+        description: "Número mínimo de jugadores requeridos para jugar."
+      - name: requires_special_device
+        description: "Indica si el juego requiere un dispositivo especial (ej. VR)."
+      - name: graphics_quality
+        description: "Calidad gráfica del juego."
+      - name: genre
+        description: "Género del juego (e.g., acción, aventura, etc.)."
+      - name: game_id
+        description: "Identificador único del juego."
+        tests:
+          - not_null
+          - unique
+      - name: user_review_text
+        description: "Texto de la reseña del usuario sobre el juego."
+      - name: platform_id
+        description: "Identificador único de la plataforma en la que se juega el juego."
+        tests:
+          - not_null
+      - name: game_title
+        description: "Título del juego, con tildes y diéresis eliminados, y caracteres especiales reemplazados."
+        tests:
+          - not_null
+      - name: soundtrack_quality
+        description: "Calidad de la banda sonora del juego."
+      - name: age_group_targeted
+        description: "Grupo de edad al que está dirigido el juego."
+      - name: platform
+        description: "Plataforma en la que se puede jugar el juego."
+      - name: load_date_utc
+        description: "Fecha y hora en que los datos fueron sincronizados en UTC."
+
