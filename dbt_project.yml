@@ -49,8 +49,8 @@ models:
       +materialized: table
       +database: "{{ env_var('DBT_ENVIRONMENTS') }}_GOLD_DB"
       core:
-        +schema: core        
+        +schema: core
 snapshots:
   +transient: false
   +target_database: "{{ env_var('DBT_ENVIRONMENTS') }}_SILVER_DB"
-  +target_schema: snapshot
+  +target_schema: snapshots
