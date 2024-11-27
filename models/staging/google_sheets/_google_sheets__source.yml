@@ -3,7 +3,7 @@ version: 2
 sources:
   - name: google_sheets
     schema: google_sheets
-    database: GAME
+    database: "{{ env_var('DBT_ENVIRONMENTS') }}_BRONZE_DB"
     quoting:
       database: false
       schema: false
