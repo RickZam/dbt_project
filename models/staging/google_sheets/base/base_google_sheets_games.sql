@@ -8,7 +8,13 @@ with
         developer,
         publisher,
         story_quality,
-        game_length_hours_,
+        CASE
+            WHEN game_length_hours_ IS NOT NULL 
+            AND game_length_hours_ != '' 
+            AND TRY_CAST(game_length_hours_ AS NUMBER(5,0)) > 0
+            THEN CAST(game_length_hours_ AS NUMBER(5,0))
+            ELSE 0
+        END AS game_length_hours_,
         release_year,
         multiplayer,
         price,

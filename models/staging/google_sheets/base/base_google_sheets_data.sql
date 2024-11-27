@@ -20,7 +20,6 @@ with
                 '[^a-zA-Z0-9 ]',
                 ''
             ) as game_title,
-
             convert_timezone('UTC', _fivetran_synced) as load_date_utc
         from src_data
     )

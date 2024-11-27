@@ -1,0 +1,226 @@
+version: 2
+
+models:
+  - name: stg_google_sheets__games
+    description: "Transformación de los datos de los juegos. Incluye validaciones como precios no negativos, longitud de reseñas controlada, y calidad del soundtrack, gráficos e historia."
+    columns:
+      - name: game_id
+        description: "Identificador único del juego."
+        tests:
+          - unique
+          - not_null
+      - name: game_title
+        description: "Título del juego."
+        tests:
+          - not_null
+          - unique
+      - name: price
+        description: "Precio del juego, validado para ser no negativo."
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 'positive']
+      - name: genre
+        description: "Género del juego."
+        tests:
+          - not_null
+      - name: platform
+        description: "Plataforma en la que el juego está disponible."
+        tests:
+          - not_null
+      - name: platform_id
+        description: "Identificador único de la plataforma."
+        tests:
+          - not_null
+      - name: developer
+        description: "Estudio desarrollador del juego."
+        tests:
+          - not_null
+      - name: publisher
+        description: "Editor del juego."
+        tests:
+          - not_null
+      - name: release_year
+        description: "Año de lanzamiento del juego."
+        tests:
+          - not_null
+          - accepted_values:
+              values: [positive_int]
+      - name: age_group_targeted
+        description: "Grupo de edad al que se dirige el juego."
+        tests:
+          - not_null
+      - name: game_length_hours
+        description: "Duración estimada del juego en horas."
+        tests:
+          - not_null
+      - name: multiplayer
+        description: "Indicador de si el juego tiene modo multijugador."
+        tests:
+          - not_null
+      - name: min_number_of_players
+        description: "Número mínimo de jugadores necesarios."
+        tests:
+          - not_null
+      - name: requires_special_device
+        description: "Indica si el juego requiere dispositivos especiales."
+        tests:
+          - not_null
+      - name: s_soundtrack_quality
+        description: "Calidad del soundtrack mapeada a un valor numérico."
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 3, 5, 0]
+      - name: s_graphics_quality
+        description: "Calidad de los gráficos mapeada a un valor numérico."
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 3, 5, 0]
+      - name: s_story_quality
+        description: "Calidad de la historia mapeada a un valor numérico."
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 3, 5, 0]
+      - name: shop_rating
+        description: "Valoración del juego en la tienda."
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3, 4, 5]
+      - name: shop_review_text
+        description: "Texto de reseña del juego."
+        tests:
+          - not_null
+          - max_length:
+              value: 150
+      - name: load_date_utc
+        description: "Fecha y hora de carga en formato UTC."
+        tests:
+          - not_null
+          - valid_timestamp
+
+  - name: stg_google_sheets__data
+    description: "Transformación de los datos de compra. Incluye validaciones como precios no negativos, reseñas cortas y calificaciones de usuarios dentro de un rango aceptable."
+    columns:
+      - name: purchase_id
+        description: "Identificador único de la compra."
+        tests:
+          - unique
+          - not_null
+      - name: purchase_date
+        description: "Fecha en la que se realizó la compra."
+        tests:
+          - not_null
+          - valid_timestamp
+      - name: quantity_purchased
+        description: "Cantidad de unidades compradas."
+        tests:
+          - not_null
+          - accepted_values:
+              values: [positive_int]
+      - name: game_id
+        description: "Identificador único del juego."
+        tests:
+          - not_null
+      - name: game_title
+        description: "Título del juego."
+        tests:
+          - not_null
+      - name: price
+        description: "Precio de la compra."
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 'positive']
+      - name: platform
+        description: "Plataforma en la que se realizó la compra."
+        tests:
+          - not_null
+      - name: user_id
+        description: "Identificador único del usuario."
+        tests:
+          - not_null
+      - name: user_rating
+        description: "Calificación del usuario sobre el juego."
+        tests:
+          - accepted_values:
+              values: [1, 2, 3, 4, 5]
+      - name: user_review_text
+        description: "Reseña del usuario sobre el juego."
+        tests:
+          - max_length:
+              value: 150
+      - name: load_date_utc
+        description: "Fecha y hora de carga en formato UTC."
+        tests:
+          - not_null
+          - valid_timestamp
+
+  - name: stg_google_sheets__users
+    description: "Transformación de los datos de usuarios. Incluye validaciones de nombres, estados, países y códigos postales."
+    columns:
+      - name: user_id
+        description: "Identificador único del usuario."
+        tests:
+          - unique
+          - not_null
+      - name: first_name
+        description: "Primer nombre del usuario."
+        tests:
+          - not_null
+      - name: last_name
+        description: "Apellido del usuario."
+        tests:
+          - not_null
+      - name: postal_code
+        description: "Código postal del usuario."
+        tests:
+          - not_null
+          - accepted_values:
+              values: [5, 9, 'UNKNOWN']
+      - name: state
+        description: "Estado del usuario."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['UNKNOWN', 'valid_states_list']
+      - name: country
+        description: "País del usuario."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['UNKNOWN', 'valid_countries_list']
+      - name: load_date_utc
+        description: "Fecha y hora de carga en formato UTC."
+        tests:
+          - not_null
+          - valid_timestamp
+
+  - name: stg_google_sheets__platform
+    description: "Transformación de los datos de plataformas. Incluye validaciones de nombres de plataformas, compañías y países."
+    columns:
+      - name: platform_id
+        description: "Identificador único de la plataforma."
+        tests:
+          - unique
+          - not_null
+      - name: platform_name
+        description: "Nombre de la plataforma."
+        tests:
+          - not_null
+      - name: company_name
+        description: "Nombre de la compañía creadora de la plataforma."
+        tests:
+          - not_null
+      - name: country
+        description: "País de la plataforma."
+        tests:
+          - not_null
+      - name: load_date_utc
+        description: "Fecha y hora de carga en formato UTC."
+        tests:
+          - not_null
+          - valid_timestamp
