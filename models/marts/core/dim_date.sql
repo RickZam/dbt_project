@@ -54,7 +54,7 @@ select
         when date_part('MONTH', date_day) in (6, 7, 8)
         then 'Summer'
         when date_part('MONTH', date_day) in (9, 10, 11)
-        then 'Fall'
+        then 'Autumn'
     end as season
 from dim_date
 

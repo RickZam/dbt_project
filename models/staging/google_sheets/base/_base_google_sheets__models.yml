@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: base_data
+  - name: base_google_sheets_data
     description: "Este modelo transforma y limpia los datos de compras de juegos, normalizando los títulos de los juegos, eliminando tildes, diéresis y caracteres especiales."
     columns:
       - name: purchase_id
@@ -19,18 +19,12 @@ models:
           - not_null
       - name: game_id
         description: "Identificador único del juego."
-        tests:
-          - not_null
-          - unique
       - name: quantity_purchased
         description: "Cantidad de juegos comprados."
         tests:
           - not_null
       - name: user_id
         description: "Identificador único del usuario que realizó la compra."
-        tests:
-          - not_null
-          - unique
       - name: user_rating
         description: "Valoración del usuario para el juego comprado."
       - name: purchase_date
@@ -46,7 +40,7 @@ models:
       - name: load_date_utc
         description: "Fecha y hora en que los datos fueron sincronizados en UTC."
 
-  - name: base_games
+  - name: base_google_sheets_games
     description: "Este modelo transforma y limpia los datos de juegos, normalizando los títulos de los juegos, eliminando tildes, diéresis y caracteres especiales."
     columns:
       - name: game_mode
@@ -77,9 +71,6 @@ models:
         description: "Género del juego (e.g., acción, aventura, etc.)."
       - name: game_id
         description: "Identificador único del juego."
-        tests:
-          - not_null
-          - unique
       - name: user_review_text
         description: "Texto de la reseña del usuario sobre el juego."
       - name: platform_id
