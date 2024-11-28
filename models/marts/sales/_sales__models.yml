@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: mart__sales_by_genre
+    description: ""
+  - name: mart__sales_by_platform
+    description: ""
+  - name: mart__sales_by_region
+    description: ""
+  - name: mart__sales_by_season
+    description: ""
+  - name: mart__sales_by_user_and_region
+    description: ""
+  - name: mart_sales_by_date
+    description: ""
+  - name: mart_sales_by_user
+    description: ""
