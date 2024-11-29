@@ -1,3 +1,8 @@
+{{ config(
+    materialized='incremental'
+    ) 
+    }}
+
 with
     silver as (
         select
@@ -37,3 +42,9 @@ select
     purchase_platform,
     load_date_utc
 from silver
+
+{% if is_incremental() %}
+
+  where load_date_utc > (select max(load_date_utc) from {{ this }})
+
+{% endif %}

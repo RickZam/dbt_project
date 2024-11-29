@@ -1,3 +1,8 @@
+{{ config(
+    materialized='incremental'
+    ) 
+    }}
+
 with
     base_data as (select * from {{ ref("base_google_sheets_data") }}),
 
@@ -50,3 +55,9 @@ with
 
 select *
 from stg_data
+
+{% if is_incremental() %}
+
+  where load_date_utc > (select max(load_date_utc) from {{ this }})
+
+{% endif %}
