@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: dim_data
+    description: ""
+
+  - name: dim_users
+    description: ""
+
+  - name: dim_game
+    description: ""
+
+  - name: dim_platform
+    description: ""
+
+  - name: fct_game_sales
+    description: ""

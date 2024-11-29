@@ -1,0 +1,7 @@
+version: 2
+
+models:
+  - name: mart__average_users_vs_shop
+    description: ""
+  - name: mart__reviews_about_best_seller
+    description: ""
