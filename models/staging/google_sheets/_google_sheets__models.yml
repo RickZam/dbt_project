@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: stg_data
+  - name: stg_google_sheets__data
     description: "Transforma y limpia los datos de compras de juegos."
     columns:
       - name: purchase_id
@@ -36,7 +36,7 @@ models:
       - name: load_date_utc
         description: "Fecha y hora de carga en formato UTC."
 
-  - name: stg_games
+  - name: stg_google_sheets__games
     description: "Transforma y limpia los datos de juegos, incluyendo precios, plataformas y calificaciones."
     columns:
       - name: game_id
@@ -94,7 +94,7 @@ models:
       - name: load_date_utc
         description: "Fecha y hora de carga en formato UTC."
 
-  - name: stg_platform
+  - name: stg_google_sheets__platform
     description: "Datos sobre las plataformas de los juegos."
     columns:
       - name: platform_id
@@ -108,7 +108,7 @@ models:
       - name: load_date_utc
         description: "Fecha y hora de carga en formato UTC."
 
-  - name: stg_users
+  - name: stg_google_sheets__users
     description: "Datos sobre los usuarios."
     columns:
       - name: user_id
@@ -125,14 +125,3 @@ models:
         description: "País del usuario."
       - name: load_date_utc
         description: "Fecha y hora de carga en formato UTC."
-
-sources:
-  - name: raw_data
-    description: "Datos crudos provenientes de la fuente externa."
-    tables:
-      - name: purchases
-        description: "Tabla de compras de juegos."
-      - name: games
-        description: "Tabla de información de juegos."
-      - name: users
-        description: "Tabla de usuarios."

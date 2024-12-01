@@ -66,50 +66,24 @@ with
         from {{ ref("dim_game") }}
     ),
 
+
+
     -- Dimensión de Fecha (ajustada para crear todas las columnas necesarias)
     dim_date as (
-        {{ dbt_utils.date_spine(
-            datepart="day",
-            start_date="cast('2000-01-01' as date)",
-            end_date="cast('2025-01-01' as date)"
-        ) }}
-    ),
-
-    -- Subconsulta que calcula las columnas adicionales para la dimensión de fecha
-    dim_date_with_calculations as (
         select 
-            date_day,
-            year(date_day) as year,
-            month(date_day) as month,
-            to_char(date_day, 'Month') as month_name,  -- Nombre completo del mes
-            year(date_day) * 100 + month(date_day) as year_month_id,  -- Identificador único Año-Mes
-            date_day - interval '1 day' as previous_day,  -- Día anterior
-            year(date_day) || '-' || lpad(week(date_day)::text, 2, '0') as year_week_day,  -- Año-Semana
-            week(date_day) as week,  -- Número de semana
-            case 
-                when extract(dow from date_day) = 0 then 'Sunday'
-                when extract(dow from date_day) = 1 then 'Monday'
-                when extract(dow from date_day) = 2 then 'Tuesday'
-                when extract(dow from date_day) = 3 then 'Wednesday'
-                when extract(dow from date_day) = 4 then 'Thursday'
-                when extract(dow from date_day) = 5 then 'Friday'
-                when extract(dow from date_day) = 6 then 'Saturday'
-            end as day_name,  -- Nombre del día de la semana
-            case 
-                when extract(day from date_day) between 1 and 7 then '1st Week'
-                when extract(day from date_day) between 8 and 14 then '2nd Week'
-                when extract(day from date_day) between 15 and 21 then '3rd Week'
-                when extract(day from date_day) between 22 and 28 then '4th Week'
-                else '5th Week'
-            end as week_of_month,  -- Semana del mes
-            extract(doy from date_day) as day_of_year,  -- Día del año
-            case 
-                when month(date_day) in (12, 1, 2) then 'Winter'
-                when month(date_day) in (3, 4, 5) then 'Spring'
-                when month(date_day) in (6, 7, 8) then 'Summer'
-                when month(date_day) in (9, 10, 11) then 'Autumn'
-            end as season
-        from dim_date
+            date,
+            year,
+            month,
+            month_name,
+            year_month_id,
+            previous_day,
+            year_week_day,
+            week,
+            day_name,
+            week_of_month,
+            day_of_year,
+            season
+        from {{ ref("dim_date") }}
     )
 
 select
@@ -153,7 +127,7 @@ select
     g.shop_review_text,
 
     -- Datos de la dimensión de fecha (ajustado)
-    d.date_day as date,  -- Asegúrate de usar el nombre correcto aquí
+    d.date,
     d.year,
     d.month,
     d.month_name,
@@ -172,7 +146,7 @@ from fct_sales s
 left join dim_users u on s.user_id = u.user_id
 left join dim_platform p on s.platform_id = p.platform_id
 left join dim_games g on s.game_id = g.game_id
-left join dim_date_with_calculations d on s.purchase_date = d.date_day  -- Ajusta según el nombre correcto
+left join dim_date d on s.purchase_date = d.date 
 
 {% if is_incremental() %}
 
