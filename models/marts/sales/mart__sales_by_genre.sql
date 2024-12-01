@@ -20,4 +20,5 @@ SELECT
     AVG(user_rating) AS average_user_rating            -- Promedio de calificación de usuarios
 FROM sales
 GROUP BY genre
+ORDER BY total_revenue DESC
 
