@@ -14,8 +14,7 @@ sales_with_date AS (
         dd.date,
         dd.year,
         dd.month,
-        dd.month_name,
-        dd.season
+        dd.month_name
     FROM sales s
     LEFT JOIN {{ ref('dim_date') }} dd
         ON s.purchase_date = dd.date
@@ -31,10 +30,8 @@ sales_by_month AS (
     ORDER BY year, month_name
 )
 SELECT
-    'Monthly' AS granularity,
     year,
-    month_name AS period,
-    NULL AS season,
+    month_name,
     total_quantity_sold,
     total_revenue
 FROM sales_by_month

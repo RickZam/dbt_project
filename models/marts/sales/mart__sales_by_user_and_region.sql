@@ -1,21 +1,22 @@
-WITH sales_by_user_region AS (
-    SELECT
-        u.state,
-        u.country,
-        COUNT(DISTINCT f.purchase_id) AS total_sales_count,
-        SUM(f.quantity_purchased) AS total_quantity_sold,
-        SUM(f.price * f.quantity_purchased) AS total_revenue,
-        AVG(f.user_rating) AS average_user_rating
-    FROM {{ ref("fct_game_sales") }} f
-    LEFT JOIN {{ ref("dim_users") }} u ON f.user_id = u.user_id
-    GROUP BY u.state, u.country
-)
-SELECT
+with
+    sales_by_user_region as (
+        select
+            u.state,
+            u.country,
+            count(distinct f.purchase_id) as total_sales_count,
+            sum(f.quantity_purchased) as total_quantity_sold,
+            sum(f.price * f.quantity_purchased) as total_revenue,
+            avg(f.user_rating) as average_user_rating
+        from {{ ref("fct_game_sales") }} f
+        left join {{ ref("dim_users") }} u on f.user_id = u.user_id
+        group by u.state, u.country
+    )
+select
     state,
     country,
     total_sales_count,
     total_quantity_sold,
     total_revenue,
     average_user_rating
-FROM sales_by_user_region
-ORDER BY total_revenue DESC
+from sales_by_user_region
+order by total_revenue desc

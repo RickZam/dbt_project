@@ -14,6 +14,8 @@ models:
           - numeric
       - name: game_id
         description: "Identificador único del juego."
+        tests:
+          - numeric
       - name: game_title
         description: "Título del juego."
       - name: price
@@ -25,12 +27,14 @@ models:
         description: "Plataforma en la que se realizó la compra."
       - name: user_id
         description: "Identificador único del usuario."
+        tests:
+          - numeric
       - name: user_rating
         description: "Calificación del usuario sobre el juego."
         tests:
           - numeric
           - accepted_values:
-              values: [0, 1, 2, 3, 4, 5]
+              values: [0 - 5]
       - name: user_review_text
         description: "Texto de la reseña del usuario sobre el juego."
       - name: load_date_utc
@@ -81,16 +85,26 @@ models:
         description: "Indicador de si el juego requiere dispositivos especiales."
       - name: s_soundtrack_quality
         description: "Calidad del soundtrack del juego."
+        tests:
+          - numeric
       - name: s_graphics_quality
         description: "Calidad de los gráficos del juego."
+        tests:
+          - numeric
       - name: s_story_quality
         description: "Calidad de la historia del juego."
+        tests:
+          - numeric
       - name: shop_rating
         description: "Valoración de la tienda sobre el juego."
         tests:
           - numeric
       - name: shop_review_text
         description: "Reseña del juego según la tienda."
+        tests:
+          - accepted_values:
+              values:
+                - [1 - 5]
       - name: load_date_utc
         description: "Fecha y hora de carga en formato UTC."
 
@@ -119,6 +133,8 @@ models:
         description: "Apellido del usuario."
       - name: postal_code
         description: "Código postal del usuario."
+        tests:
+          - numeric
       - name: state
         description: "Estado del usuario."
       - name: country

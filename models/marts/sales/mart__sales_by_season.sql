@@ -1,19 +1,19 @@
-WITH sales_by_season AS (
-    SELECT
-        dd.season,
-        COUNT(DISTINCT f.purchase_id) AS total_sales_count,
-        SUM(f.quantity_purchased) AS total_quantity_sold,
-        SUM(f.price * f.quantity_purchased) AS total_revenue,
-        AVG(f.user_rating) AS average_user_rating
-    FROM {{ ref("fct_game_sales") }} f
-    LEFT JOIN {{ ref("dim_date") }} dd ON f.purchase_date = dd.date
-    GROUP BY dd.season
-)
-SELECT
-    season,
-    total_sales_count,
-    total_quantity_sold,
-    total_revenue,
+with
+    sales_by_season as (
+        select
+            dd.season,
+            count(distinct f.purchase_id) as total_sales_count,
+            sum(f.quantity_purchased) as total_quantity_sold,
+            sum(f.price * f.quantity_purchased) as total_revenue,
+            avg(f.user_rating) as average_user_rating
+        from {{ ref("fct_game_sales") }} f
+        left join {{ ref("dim_date") }} dd on f.purchase_date = dd.date
+        group by dd.season
+    )
+select
+    season, total_sales_count, 
+    total_quantity_sold, 
+    total_revenue, 
     average_user_rating
-FROM sales_by_season
-ORDER BY total_revenue DESC
+from sales_by_season
+order by total_revenue desc
