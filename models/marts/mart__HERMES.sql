@@ -150,7 +150,6 @@ left join dim_date d on s.purchase_date = d.date
 
 {% if is_incremental() %}
 
-  -- Solo seleccionamos los registros nuevos o actualizados
-  where s.purchase_id > (select max(purchase_id) from {{ this }})
+  where load_date_utc > (select max(load_date_utc) from {{ this }})
 
 {% endif %}

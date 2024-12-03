@@ -1,3 +1,4 @@
+
 WITH sales AS (
     SELECT
         purchase_id,
@@ -7,8 +8,7 @@ WITH sales AS (
         genre,
         game_title,
         user_id,
-        user_rating,
-        load_date_utc
+        user_rating
     FROM {{ ref("fct_game_sales") }}
 )
 
@@ -21,4 +21,5 @@ SELECT
 FROM sales
 GROUP BY genre
 ORDER BY total_revenue DESC
+
 

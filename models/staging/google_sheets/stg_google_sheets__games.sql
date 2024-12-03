@@ -85,7 +85,6 @@ with
                 then left(trim(user_review_text), 150)
                 else trim(user_review_text)
             end as shop_review_text,
-
             load_date_utc
         from base_games
     )

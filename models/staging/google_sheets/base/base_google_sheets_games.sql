@@ -1,5 +1,5 @@
 with
-    src_games as (select * from {{ source("google_sheets", "games") }}),
+    src_games as (select * from {{ ref("game_snapshot") }}),
 
     base_games as (
         select

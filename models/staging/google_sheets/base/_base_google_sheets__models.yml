@@ -19,6 +19,8 @@ models:
           - not_null
       - name: game_id
         description: "Identificador único del juego."
+        tests:
+          - numeric_values
       - name: quantity_purchased
         description: "Cantidad de juegos comprados."
         tests:

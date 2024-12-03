@@ -1,3 +1,8 @@
+{{ config(
+    materialized='incremental',
+    unique_key='purchase_id'
+) }}
+
 with
     platform_sales as (
         select
@@ -32,3 +37,9 @@ select
 from platform_sales ps
 join country_sales cs on ps.company_name = cs.company_name
 order by ps.total_quantity_sold desc, cs.total_quantity_sold desc
+
+{% if is_incremental() %}
+
+  where load_date_utc > (select max(load_date_utc) from {{ this }})
+
+{% endif %}

@@ -1,3 +1,8 @@
+{{ config(
+    materialized='incremental',
+    unique_key='purchase_id'
+) }}
+
 WITH sales AS (
     SELECT
         f.purchase_id,
@@ -20,3 +25,9 @@ SELECT
 FROM sales s
 GROUP BY s.user_id
 ORDER BY total_revenue DESC
+
+{% if is_incremental() %}
+
+  where load_date_utc > (select max(load_date_utc) from {{ this }})
+
+{% endif %}
