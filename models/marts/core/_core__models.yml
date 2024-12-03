@@ -1,17 +1,145 @@
 version: 2
 
 models:
-  - name: dim_data
-    description: ""
-
-  - name: dim_users
-    description: ""
+  - name: dim_date
+    description: "Tabla dimensional que representa fechas con múltiples atributos derivados, como año, mes, semana y estación."
+    columns:
+      - name: date
+        description: "La fecha en el conjunto de datos (formato YYYY-MM-DD)."
+      - name: id_date
+        description: "Identificador único para la fecha (formato YYYYMMDD)."
+      - name: year
+        description: "Año extraído de la fecha."
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 1999
+              max_value: 2026
+      - name: month
+        description: "Mes extraído de la fecha."
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 1
+              max_value: 12
+      - name: month_name
+        description: "Nombre del mes (por ejemplo Jan, Fer, Mar)."
+        tests:
+          - accepted_values:
+              values: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+      - name: year_month_id
+        description: "Identificador único que combina el año y el mes (YYYYMM)."
+      - name: previous_day
+        description: "Fecha anterior al día actual (formato YYYY-MM-DD)."
+      - name: year_week_day
+        description: "Identificador único que combina el año, la semana y el día de la semana."
+      - name: week
+        description: "Número de la semana."
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 1
+              max_value: 53
+      - name: day_name
+        description: "Nombre completo del día de la semana."
+        tests:
+          - validate_day_name
+      - name: week_of_month
+        description: "Semana del mes (1ª Semana, 2ª Semana, etc.)."
+        tests:
+          - accepted_values:
+              values: ["1st Week", "2nd Week", "3rd Week", "4th Week", "5th Week"]
+      - name: day_of_year
+        description: "Día del año (1 a 365/366)."
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 1
+              max_value: 366
+      - name: season
+        description: "Estación del año."
+        tests:
+          - accepted_values:
+              values: ["Winter", "Spring", "Summer", "Autumn"]
 
   - name: dim_game
-    description: ""
+    description: "Tabla dimensional con detalles de juegos, como título, género, plataforma y atributos de calidad."
+    columns:
+      - name: game_id
+        description: "Identificador único del juego."
+      - name: game_title
+        description: "Título del juego."
+      - name: genre
+        description: "Género del juego."
+      - name: platform
+        description: "Plataforma del juego."
+      - name: price
+        description: "Precio del juego."
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 500
+      - name: release_year
+        description: "Año de lanzamiento del juego."
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 1980
+              max_value: 2024
+      - name: age_group_targeted
+        description: "Grupo de edad al que está dirigido el juego."
+      - name: game_length_hours
+        description: "Duración del juego en horas."
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 1
+              max_value: 1000
+      - name: shop_rating
+        description: "Valoración de la tienda sobre el juego."
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 10
 
   - name: dim_platform
-    description: ""
+    description: "Tabla dimensional que almacena información de plataformas de videojuegos."
+    columns:
+      - name: platform_id
+        description: "Identificador único de la plataforma."
+      - name: platform_name
+        description: "Nombre de la plataforma (por ejemplo, Nintendo Switch)."
+      - name: company_name
+        description: "Nombre de la compañía propietaria de la plataforma."
+      - name: country
+        description: "País de origen de la plataforma."
+
+  - name: dim_users
+    description: "Tabla dimensional que contiene detalles de los usuarios."
+    columns:
+      - name: user_id
+        description: "Identificador único del usuario."
+      - name: first_name
+        description: "Primer nombre del usuario."
+      - name: last_name
+        description: "Apellido del usuario."
+      - name: postal_code
+        description: "Código postal del usuario."
+      - name: state
+        description: "Estado del usuario."
+      - name: country
+        description: "País del usuario."
 
   - name: fct_game_sales
-    description: ""
+    description: "Tabla de hechos que contiene los datos de ventas de juegos."
+    columns:
+      - name: purchase_id
+        description: "Identificador único de la compra."
+      - name: purchase_date
+        description: "Fecha de la compra (formato YYYY-MM-DD)."
+      - name: quantity_purchased
+        description: "Cantidad de unidades compradas."
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 1
+              max_value: 100
+      - name: price
+        description: "Precio total de la compra."
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 10000

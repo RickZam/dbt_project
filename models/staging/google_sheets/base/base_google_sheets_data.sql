@@ -1,11 +1,13 @@
 {{ config(
     materialized='incremental',
-    unique_key = 'purchase_id'
-    ) 
-    }}
+    unique_key='purchase_id'
+) }}
 
 with
-    src_data as (select * from {{ source("google_sheets", "data") }}),
+    src_data as (
+        select * 
+        from {{ source("google_sheets", "data") }}
+    ),
 
     base_data as (
         select
@@ -37,6 +39,7 @@ from base_data
 
 {% if is_incremental() %}
 
-  where purchase_id > (select max(purchase_id) from {{ this }})
+  -- Incremental basado en la fecha de carga
+  where load_date_utc > (select max(load_date_utc) from {{ this }})
 
 {% endif %}

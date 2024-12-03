@@ -46,6 +46,6 @@ from silver
 
 {% if is_incremental() %}
 
-  where purchase_id > (select max(purchase_id) from {{ this }})
+  where load_date_utc > (select max(load_date_utc) from {{ this }})
 
 {% endif %}
