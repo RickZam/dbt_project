@@ -1,7 +1,4 @@
-{{ config(
-    materialized='incremental',
-    unique_key='purchase_id'
-) }}
+
 
 WITH sales AS (
     SELECT
@@ -18,16 +15,11 @@ WITH sales AS (
 
 SELECT
     s.user_id,
-    COUNT(DISTINCT s.purchase_id) AS total_sales_count,  -- Total de compras por usuario
-    SUM(s.quantity_purchased) AS total_quantity_sold,   -- Total de unidades compradas por usuario
-    SUM(s.price * s.quantity_purchased) AS total_revenue, -- Ingresos totales por usuario
-    ROUND(AVG(s.user_rating), 2) AS average_user_rating           -- Calificación promedio por usuario
+    COUNT(DISTINCT s.purchase_id) AS total_sales_count,
+    SUM(s.quantity_purchased) AS total_quantity_sold,
+    SUM(s.price * s.quantity_purchased) AS total_revenue,
+    ROUND(AVG(s.user_rating), 2) AS average_user_rating 
 FROM sales s
 GROUP BY s.user_id
 ORDER BY total_revenue DESC
 
-{% if is_incremental() %}
-
-  where load_date_utc > (select max(load_date_utc) from {{ this }})
-
-{% endif %}

@@ -1,7 +1,3 @@
-{{ config(
-    materialized='incremental',
-    unique_key='purchase_id'
-) }}
 
 with
     sales_by_user_region as (
@@ -25,9 +21,3 @@ select
     average_user_rating
 from sales_by_user_region
 order by total_revenue desc
-
-{% if is_incremental() %}
-
-  where load_date_utc > (select max(load_date_utc) from {{ this }})
-
-{% endif %}
