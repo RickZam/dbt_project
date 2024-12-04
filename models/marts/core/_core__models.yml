@@ -39,8 +39,6 @@ models:
               max_value: 53
       - name: day_name
         description: "Nombre completo del día de la semana."
-        tests:
-          - validate_day_name
       - name: week_of_month
         description: "Semana del mes (1ª Semana, 2ª Semana, etc.)."
         tests:

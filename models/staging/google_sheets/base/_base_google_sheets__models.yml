@@ -91,4 +91,3 @@ models:
         description: "Plataforma en la que se puede jugar el juego."
       - name: load_date_utc
         description: "Fecha y hora en que los datos fueron sincronizados en UTC."
-
