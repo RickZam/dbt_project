@@ -1,3 +1,8 @@
+{{ config(
+    materialized='incremental',
+    unique_key='purchase_id'
+) }}
+
 with
     sales as (
         select
@@ -15,10 +20,16 @@ with
 
 select
     s.platform,
-    count(distinct s.purchase_id) as total_sales_count,  -- Total de ventas (transacciones)
-    sum(s.quantity_purchased) as total_quantity_sold,  -- Total de unidades vendidas
-    sum(s.price * s.quantity_purchased) as total_revenue,  -- Ingresos totales
-    avg(s.user_rating) as average_user_rating  -- Promedio de calificación de usuarios
+    count(distinct s.purchase_id) as total_sales_count,
+    sum(s.quantity_purchased) as total_quantity_sold,
+    sum(s.price * s.quantity_purchased) as total_revenue,
+    avg(s.user_rating) as average_user_rating
 from sales s
 group by s.platform
 ORDER BY total_revenue DESC
+
+{% if is_incremental() %}
+
+  where load_date_utc > (select max(load_date_utc) from {{ this }})
+
+{% endif %}

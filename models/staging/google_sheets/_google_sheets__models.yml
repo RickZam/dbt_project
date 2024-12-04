@@ -11,26 +11,33 @@ models:
       - name: quantity_purchased
         description: "Cantidad de unidades compradas."
         tests:
-          - numeric
+          - dbt_utils.accepted_range:
+              min_value: 1 
       - name: game_id
         description: "Identificador único del juego."
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0 
       - name: game_title
         description: "Título del juego."
       - name: price
         description: "Precio de la compra, asegurando que sea positivo."
         tests:
-          - numeric
-          - check_positive
+          - dbt_utils.accepted_range:
+              min_value: 0 
       - name: platform
         description: "Plataforma en la que se realizó la compra."
       - name: user_id
         description: "Identificador único del usuario."
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0 
       - name: user_rating
         description: "Calificación del usuario sobre el juego."
         tests:
-          - numeric
-          - accepted_values:
-              values: [0, 1, 2, 3, 4, 5]
+          - dbt_utils.accepted_range:
+              min_value: 0 
+              max_value: 5 
       - name: user_review_text
         description: "Texto de la reseña del usuario sobre el juego."
       - name: load_date_utc
@@ -46,8 +53,9 @@ models:
       - name: price
         description: "Precio del juego."
         tests:
-          - numeric
-          - check_positive
+          - dbt_utils.accepted_range:
+              min_value: 0 
+              max_value: 200 
       - name: genre
         description: "Género del juego."
       - name: platform
@@ -61,34 +69,43 @@ models:
       - name: release_year
         description: "Año de lanzamiento del juego."
         tests:
-          - numeric
-          - check_positive
+          - dbt_utils.accepted_range:
+              min_value: 1980 
+              max_value: 2024 
       - name: age_group_targeted
         description: "Grupo de edad al que está dirigido el juego."
       - name: game_length_hours
         description: "Duración del juego en horas."
         tests:
-          - numeric
-          - check_positive
+          - dbt_utils.accepted_range:
+              min_value: 0
       - name: multiplayer
         description: "Indicador de si el juego tiene modo multijugador."
       - name: min_number_of_players
         description: "Número mínimo de jugadores necesarios."
-        tests:
-          - numeric
-          - check_positive
       - name: requires_special_device
         description: "Indicador de si el juego requiere dispositivos especiales."
       - name: s_soundtrack_quality
         description: "Calidad del soundtrack del juego."
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0 
       - name: s_graphics_quality
         description: "Calidad de los gráficos del juego."
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0  
       - name: s_story_quality
         description: "Calidad de la historia del juego."
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0 
       - name: shop_rating
         description: "Valoración de la tienda sobre el juego."
         tests:
-          - numeric
+          - dbt_utils.accepted_range:
+              min_value: 0 
+              max_value: 10 
       - name: shop_review_text
         description: "Reseña del juego según la tienda."
       - name: load_date_utc
@@ -113,12 +130,18 @@ models:
     columns:
       - name: user_id
         description: "Identificador único del usuario."
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0 
       - name: first_name
         description: "Nombre del usuario."
       - name: last_name
         description: "Apellido del usuario."
       - name: postal_code
         description: "Código postal del usuario."
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0 
       - name: state
         description: "Estado del usuario."
       - name: country

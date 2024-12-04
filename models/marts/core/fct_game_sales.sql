@@ -24,6 +24,12 @@ with
             d.load_date_utc
         from {{ ref("stg_google_sheets__data") }} d
         left join {{ ref("stg_google_sheets__games") }} g on d.game_id = g.game_id
+        
+{% if is_incremental() %}
+
+  where d.load_date_utc > (select max(load_date_utc) from {{ this }})
+
+{% endif %}
     )
 
 select
@@ -43,9 +49,3 @@ select
     purchase_platform,
     load_date_utc
 from silver
-
-{% if is_incremental() %}
-
-  where purchase_id > (select max(purchase_id) from {{ this }})
-
-{% endif %}

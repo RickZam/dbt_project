@@ -1,38 +1,45 @@
-WITH platform_sales AS (
-    -- Total de ventas por plataforma
-    SELECT
-        p.platform_id,
-        p.platform_name,
-        p.company_name,
-        SUM(d.quantity_purchased) AS total_quantity_sold,  -- Total de unidades vendidas
-        SUM(d.price * d.quantity_purchased) AS total_revenue  -- Ingresos totales
-    FROM {{ ref("fct_game_sales") }} d
-    JOIN {{ ref("dim_platform") }} p ON d.platform_id = p.platform_id  -- Relacionamos con la plataforma
-    GROUP BY p.platform_id, p.platform_name, p.company_name
-),
+{{ config(
+    materialized='incremental',
+    unique_key='purchase_id'
+) }}
 
-country_sales AS (
-    -- Total de ventas por país (agrupadas por compañía y su país)
-    SELECT
-        p.country,
-        p.company_name,
-        SUM(d.quantity_purchased) AS total_quantity_sold,  -- Total de unidades vendidas por país
-        SUM(d.price * d.quantity_purchased) AS total_revenue  -- Ingresos totales por país
-    FROM {{ ref("fct_game_sales") }} d
-    JOIN {{ ref("dim_platform") }} p ON d.platform_id = p.platform_id  -- Relacionamos con la plataforma
-    GROUP BY p.country, p.company_name
-)
+with
+    platform_sales as (
+        select
+            p.platform_id,
+            p.platform_name,
+            p.company_name,
+            sum(d.quantity_purchased) as total_quantity_sold,
+            sum(d.price * d.quantity_purchased) as total_revenue
+        from {{ ref("fct_game_sales") }} d
+        join {{ ref("dim_platform") }} p on d.platform_id = p.platform_id
+        group by p.platform_id, p.platform_name, p.company_name
+    ),
 
--- Obtenemos los resultados de ventas por plataforma y país
-SELECT
+    country_sales as (
+        select
+            p.country,
+            p.company_name,
+            sum(d.quantity_purchased) as total_quantity_sold,
+            sum(d.price * d.quantity_purchased) as total_revenue
+        from {{ ref("fct_game_sales") }} d
+        join {{ ref("dim_platform") }} p on d.platform_id = p.platform_id
+        group by p.country, p.company_name
+    )
+
+select
     ps.platform_name,
-    ps.total_quantity_sold AS platform_quantity_sold,
-    ps.total_revenue AS platform_revenue,
+    ps.total_quantity_sold as platform_quantity_sold,
+    ps.total_revenue as platform_revenue,
     cs.country,
-    cs.total_quantity_sold AS country_quantity_sold,
-    cs.total_revenue AS country_revenue
-FROM platform_sales ps
-JOIN country_sales cs ON ps.company_name = cs.company_name  -- Relacionamos plataformas con los países a través de la compañía
-ORDER BY ps.total_quantity_sold DESC, cs.total_quantity_sold DESC  -- Ordenamos por ventas totales
+    cs.total_quantity_sold as country_quantity_sold,
+    cs.total_revenue as country_revenue
+from platform_sales ps
+join country_sales cs on ps.company_name = cs.company_name
+order by ps.total_quantity_sold desc, cs.total_quantity_sold desc
 
+{% if is_incremental() %}
 
+  where load_date_utc > (select max(load_date_utc) from {{ this }})
+
+{% endif %}

@@ -9,8 +9,7 @@ with
             lower(trim(first_name)) as first_name,
             lower(trim(last_name)) as last_name,
 
-            -- Validación del código postal: debe ser de 5 o 9 dígitos, si no, se
-            -- marca como 'UNKNOWN'
+            -- Validación del código postal
             case
                 when
                     length(cast(postal_code as varchar)) = 5

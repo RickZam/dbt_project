@@ -1,11 +1,13 @@
 {{ config(
     materialized='incremental',
-    unique_key = 'purchase_id'
-    ) 
-    }}
+    unique_key='purchase_id'
+) }}
 
 with
-    src_data as (select * from {{ source("google_sheets", "data") }}),
+    src_data as (
+        select * 
+        from {{ source("google_sheets", "data") }}
+    ),
 
     base_data as (
         select
@@ -18,6 +20,7 @@ with
             user_rating,
             purchase_date,
             user_review_text,
+
             -- Reemplazar tildes, diéresis y eliminar caracteres especiales
             regexp_replace(
                 translate(
@@ -26,6 +29,7 @@ with
                 '[^a-zA-Z0-9 ]',
                 ''
             ) as game_title,
+            
             convert_timezone('UTC', _fivetran_synced) as load_date_utc
         from src_data
     )
@@ -35,6 +39,7 @@ from base_data
 
 {% if is_incremental() %}
 
-  where purchase_id > (select max(purchase_id) from {{ this }})
+  -- Incremental basado en la fecha de carga
+  where load_date_utc > (select max(load_date_utc) from {{ this }})
 
 {% endif %}

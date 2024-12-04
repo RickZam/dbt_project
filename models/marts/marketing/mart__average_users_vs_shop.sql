@@ -9,9 +9,9 @@ with
 select
     g.game_id,
     g.game_title,
-    round(u.avg_user_rating, 2) as avg_user_rating,  -- Puntuación media de los usuarios en escala 1-5
-    round((u.avg_user_rating * 2), 2) as avg_user_rating_scaled,  -- Puntuación media de los usuarios en escala 1-10
-    g.shop_rating,  -- Puntuación de la tienda en escala 1-10
+    round(u.avg_user_rating, 2) as avg_user_rating,
+    round((u.avg_user_rating * 2), 2) as avg_user_rating_scaled,
+    g.shop_rating,
     round(abs(g.shop_rating - (u.avg_user_rating * 2)), 2) as rating_difference  -- Usamos ABS() para obtener la diferencia absoluta y redondeamos a 2 decimales
 from user_avg_rating u
 join {{ ref("dim_game") }} g on u.game_id = g.game_id
