@@ -1,7 +1,3 @@
-{{ config(
-    materialized='incremental',
-    unique_key='purchase_id'
-) }}
 
 WITH sales AS (
     SELECT
@@ -40,9 +36,3 @@ SELECT
     total_quantity_sold,
     total_revenue
 FROM sales_by_month
-
-{% if is_incremental() %}
-
-  where load_date_utc > (select max(load_date_utc) from {{ this }})
-
-{% endif %}
